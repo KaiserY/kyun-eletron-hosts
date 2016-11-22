@@ -1,0 +1,12 @@
+@import '~@angular/material/core/theming/prebuilt/deeppurple-amber.css';
+@import "~roboto-fontface/css/roboto/roboto-fontface.css";
+@import "~material-design-icons/iconfont/material-icons.css";
+
+html {
+  height: 100%;
+}
+body {
+  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  margin: 0px;
+  height: 100%;
+}
