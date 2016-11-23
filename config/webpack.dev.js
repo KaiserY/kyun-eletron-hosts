@@ -39,10 +39,8 @@ module.exports = function (options) {
     plugins: [
       new DefinePlugin({
         'ENV': JSON.stringify(METADATA.ENV),
-        'process.env': {
-          'ENV': JSON.stringify(METADATA.ENV),
-          'NODE_ENV': JSON.stringify(METADATA.ENV)
-        }
+        'process.env.ENV': JSON.stringify(METADATA.ENV),
+        'process.env.NODE_ENV': JSON.stringify(METADATA.ENV)
       }),
       new ExtractTextPlugin('[name].bundle.css'),
       new LoaderOptionsPlugin({
