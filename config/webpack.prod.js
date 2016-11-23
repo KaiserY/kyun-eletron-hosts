@@ -15,7 +15,6 @@ const NormalModuleReplacementPlugin = require('webpack/lib/NormalModuleReplaceme
 const ProvidePlugin = require('webpack/lib/ProvidePlugin');
 const UglifyJsPlugin = require('webpack/lib/optimize/UglifyJsPlugin');
 const WebpackMd5Hash = require('webpack-md5-hash');
-const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 
 /**
  * Webpack Constants
@@ -98,13 +97,6 @@ module.exports = function (env) {
             customAttrAssign: [/\)?\]?=/]
           }
         }
-      }),
-      new BrowserSyncPlugin({
-        host: HOST,
-        port: PORT,
-        files: "dist/**/*",
-        server: { baseDir: ['dist/'] },
-        open: false
       })
     ]
   });

@@ -9,7 +9,6 @@ const DefinePlugin = require('webpack/lib/DefinePlugin');
 const NamedModulesPlugin = require('webpack/lib/NamedModulesPlugin');
 const LoaderOptionsPlugin = require('webpack/lib/LoaderOptionsPlugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 
 /**
  * Webpack Constants
@@ -26,6 +25,8 @@ const METADATA = webpackMerge(commonConfig({ env: ENV }).metadata, {
 module.exports = function (options) {
   return webpackMerge(commonConfig({ env: ENV }), {
     devtool: 'cheap-module-eval-source-map',
+
+    target: 'electron-renderer',
 
     output: {
       path: helpers.root('dist'),
@@ -53,13 +54,6 @@ module.exports = function (options) {
             resourcePath: 'src'
           }
         }
-      }),
-      new BrowserSyncPlugin({
-        host: HOST,
-        port: PORT,
-        files: "dist/**/*",
-        server: { baseDir: ['dist/'] },
-        open: false
       })
     ],
     node: {
