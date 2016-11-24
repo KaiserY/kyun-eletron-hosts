@@ -9,6 +9,7 @@ const DefinePlugin = require('webpack/lib/DefinePlugin');
 const NamedModulesPlugin = require('webpack/lib/NamedModulesPlugin');
 const LoaderOptionsPlugin = require('webpack/lib/LoaderOptionsPlugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const nodeExternals = require('webpack-node-externals');
 
 /**
  * Webpack Constants
@@ -60,7 +61,23 @@ module.exports = function (options) {
       process: true,
       module: false,
       clearImmediate: false,
-      setImmediate: false
-    }
+      setImmediate: false,
+      __dirname: true
+    },
+    externals: [
+      nodeExternals({
+        whitelist: [
+          /@angular/,
+          /core-js/,
+          /zone.js/,
+          /rxjs/,
+          'material-design-icons',
+          'roboto-fontface',
+          'codemirror',
+          'sudo-prompt',
+          'ts-helpers'
+        ]
+      })
+    ]
   });
 }

@@ -15,6 +15,7 @@ const NormalModuleReplacementPlugin = require('webpack/lib/NormalModuleReplaceme
 const ProvidePlugin = require('webpack/lib/ProvidePlugin');
 const UglifyJsPlugin = require('webpack/lib/optimize/UglifyJsPlugin');
 const WebpackMd5Hash = require('webpack-md5-hash');
+const nodeExternals = require('webpack-node-externals');
 
 /**
  * Webpack Constants
@@ -32,6 +33,8 @@ module.exports = function (env) {
   return webpackMerge(commonConfig({ env: ENV }), {
     devtool: 'source-map',
 
+    target: 'electron-renderer',
+
     output: {
       path: helpers.root('dist'),
       publicPath: '',
@@ -44,10 +47,8 @@ module.exports = function (env) {
       new WebpackMd5Hash(),
       new DefinePlugin({
         'ENV': JSON.stringify(METADATA.ENV),
-        'process.env': {
-          'ENV': JSON.stringify(METADATA.ENV),
-          'NODE_ENV': JSON.stringify(METADATA.ENV),
-        }
+        'process.env.ENV': JSON.stringify(METADATA.ENV),
+        'process.env.NODE_ENV': JSON.stringify(METADATA.ENV)
       }),
       new UglifyJsPlugin({
         // beautify: true, //debug
@@ -97,6 +98,30 @@ module.exports = function (env) {
             customAttrAssign: [/\)?\]?=/]
           }
         }
+      })
+    ],
+
+    node: {
+      global: true,
+      crypto: 'empty',
+      process: true,
+      module: false,
+      clearImmediate: false,
+      setImmediate: false,
+      __dirname: true
+    },
+    externals: [
+      nodeExternals({
+        whitelist: [
+          /@angular/,
+          /core-js/,
+          /zone.js/,
+          /rxjs/,
+          'material-design-icons',
+          'roboto-fontface',
+          'codemirror',
+          'ts-helpers'
+        ]
       })
     ]
   });

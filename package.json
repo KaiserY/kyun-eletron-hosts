@@ -1,11 +1,12 @@
 {
-  "name": "kyun-client-web",
+  "name": "kyun-electron-hosts",
+  "productName": "kyun-electron-hosts",
   "version": "1.0.0",
-  "description": "kyun-client-web",
-  "main": "dist/electron.js",
+  "description": "kyun-electron-hosts",
+  "main": "./dist/electron.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/KaiserY/kyun-client-web.git"
+    "url": "git+https://github.com/KaiserY/kyun-electron-hosts.git"
   },
   "keywords": [
     "Angular"
@@ -13,9 +14,9 @@
   "author": "KaiserY <yueyang.fanqiang@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/KaiserY/kyun-client-web/issues"
+    "url": "https://github.com/KaiserY/kyun-electron-hosts/issues"
   },
-  "homepage": "https://github.com/KaiserY/kyun-client-web#readme",
+  "homepage": "https://github.com/KaiserYkyun-electron-hosts#readme",
   "scripts": {
     "rimraf": "rimraf",
     "tslint": "tslint",
@@ -32,8 +33,8 @@
     "server:prod": "npm run clean && better-npm-run server:prod",
     "build:dev": "npm run clean && better-npm-run build:dev",
     "build:prod": "npm run clean && better-npm-run build:prod",
-    "pack": "npm run clean:dist && npm run build:prod && build",
-    "dist": "npm run clean:dist && npm run build:prod && build",
+    "pack": "npm run clean && npm run build:dev && build --dir",
+    "dist": "npm run clean && npm run build:dev && build",
     "webdriver:update": "npm run webdriver-manager update",
     "webdriver:start": "npm run webdriver-manager start",
     "pree2e": "npm run webdriver:update -- --standalone",
@@ -66,10 +67,6 @@
     }
   },
   "build": {
-    "download": {
-      "mirror": "https://npm.taobao.org/mirrors/electron/",
-      "strictSSL": false
-    },
     "linux": {
       "target": "rpm",
       "depends": []
@@ -78,29 +75,32 @@
       "msi": false
     }
   },
-  "dependencies": {
-    "@angular/common": "2.2.2",
-    "@angular/compiler": "2.2.2",
-    "@angular/core": "2.2.2",
-    "@angular/forms": "^2.2.2",
-    "@angular/http": "2.2.2",
+  "directories" : {
+    "output": "./dist/app"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@angular/common": "2.2.3",
+    "@angular/compiler": "2.2.3",
+    "@angular/core": "2.2.3",
+    "@angular/forms": "^2.2.3",
+    "@angular/http": "2.2.3",
     "@angular/material": "^2.0.0-alpha.9-3",
-    "@angular/platform-browser": "2.2.2",
-    "@angular/platform-browser-dynamic": "2.2.2",
-    "@angular/router": "3.2.2",
-    "@angular/upgrade": "^2.2.2",
+    "@angular/platform-browser": "2.2.3",
+    "@angular/platform-browser-dynamic": "2.2.3",
+    "@angular/router": "3.2.3",
+    "@angular/upgrade": "^2.2.3",
     "codemirror": "^5.21.0",
     "core-js": "^2.4.1",
     "material-design-icons": "^3.0.1",
     "roboto-fontface": "^0.6.0",
     "rxjs": "5.0.0-rc.4",
-    "zone.js": "0.7.1"
-  },
-  "devDependencies": {
+    "sudo-prompt": "^6.2.0",
+    "zone.js": "0.7.2",
     "@types/codemirror": "0.0.35",
     "@types/hammerjs": "^2.0.33",
     "@types/jasmine": "^2.5.38",
-    "@types/node": "^6.0.50",
+    "@types/node": "^6.0.51",
     "@types/source-map": "^0.5.0",
     "@types/uglify-js": "^2.6.28",
     "@types/webpack": "^2.0.0",
@@ -143,13 +143,14 @@
     "to-string-loader": "^1.1.5",
     "ts-helpers": "^1.1.2",
     "ts-node": "^1.7.0",
-    "tslint": "^4.0.1",
+    "tslint": "^4.0.2",
     "tslint-loader": "^3.2.0",
     "typedoc": "^0.5.1",
     "typescript": "^2.0.10",
     "webpack": "2.1.0-beta.27",
     "webpack-dev-middleware": "^1.8.4",
     "webpack-md5-hash": "0.0.5",
-    "webpack-merge": "^0.17.0"
+    "webpack-merge": "^0.17.0",
+    "webpack-node-externals": "^1.5.4"
   }
 }

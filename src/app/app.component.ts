@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { AppState } from './app.service';
+import { HostsService } from './hosts.service';
 
 import * as CodeMirror from 'codemirror';
 
@@ -13,24 +14,59 @@ import * as fs from 'fs';
 })
 export class AppComponent implements OnInit {
 
-  path = 'C:\\Windows\\System32\\drivers\\etc\\hosts';
+  hostsPath: string = 'the hosts file path...';
   textarea: HTMLTextAreaElement;
   appCodeMirror: CodeMirror.EditorFromTextArea;
 
   constructor(
-    public appState: AppState) {
-      appState.state.version = 1;
+    public appState: AppState,
+    public hostsService: HostsService) {
+    appState.state.version = 1;
   }
 
   ngOnInit() {
     console.log('Initial App State', this.appState.state);
 
-    console.log(process.env);
-    console.log(this.path);
+    this.textarea = <HTMLTextAreaElement>document.getElementById("app-editor");
 
-    fs.readFile(this.path, 'utf-8', (err, data) => {
-      console.log(err);
-      console.log(data);
+    this.hostsPath = this.hostsService.getHostsPath();
+
+    fs.readFile(this.hostsPath, 'utf-8', (err, data) => {
+      var text;
+      if (err) {
+        text = 'error: ' + err;
+        console.error(text);
+      } else {
+        text = data;
+      };
+
+      this.appCodeMirror = CodeMirror.fromTextArea(this.textarea, {
+        mode: 'hosts',
+        theme: "solarized light",
+        lineNumbers: true,
+        tabSize: 8
+      });
+
+      this.appCodeMirror.getDoc().setValue(text);
+      this.appCodeMirror.getDoc().clearHistory();
+
+      this.appCodeMirror.setOption("extraKeys", {
+        "Ctrl-/": (cm) => {
+          cm.toggleComment();
+        },
+        "Ctrl-S": (cm) => {
+          this.hostsService.saveHosts(this.removeTrailingNewline(cm.getValue()));
+        }
+      });
     });
+  }
+
+  onSave() {
+    var text = this.removeTrailingNewline(this.appCodeMirror.getValue());
+    this.hostsService.saveHosts(text);
+  }
+
+  removeTrailingNewline(content: string): string {
+    return content.replace(/^\s+|\s+$/g, "");
   }
 }

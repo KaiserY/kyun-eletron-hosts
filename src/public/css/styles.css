@@ -1,11 +1,18 @@
 @import '~@angular/material/core/theming/prebuilt/deeppurple-amber.css';
 @import "~roboto-fontface/css/roboto/roboto-fontface.css";
 @import "~material-design-icons/iconfont/material-icons.css";
+@import "~codemirror/lib/codemirror.css";
+@import "~codemirror/theme/solarized.css";
 
 html {
   height: 100%;
 }
 body {
   margin: 0px;
+  height: 100%;
+}
+
+.CodeMirror {
+  width: 100%;
   height: 100%;
 }
