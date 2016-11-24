@@ -5,8 +5,8 @@
 
   <section>
     <md-card>
-      <md-card-header>
-        <md-card-title>Hosts file location</md-card-title>
+      <md-card-header (click)="fxxk()">
+        <md-card-title><span>{{title}}</span><span *ngIf="modifiedFlag">*</span></md-card-title>
         <md-card-subtitle>C:\Windows\System32\drivers\etc\hosts</md-card-subtitle>
       </md-card-header>
       <md-card-content>

@@ -1,6 +1,5 @@
 main {
   height: 100%;
-
 }
 
 md-toolbar {
@@ -17,9 +16,6 @@ section {
 md-card {
   height: calc(100% - 48px);
   background-color: #eee8d5;
-}
-
-md-card-header {
 }
 
 md-card-content {

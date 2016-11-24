@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 
 import { AppState } from './app.service';
 import { HostsService } from './hosts.service';
@@ -14,11 +14,14 @@ import * as fs from 'fs';
 })
 export class AppComponent implements OnInit {
 
+  title: string = 'Hosts';
   hostsPath: string = 'the hosts file path...';
   textarea: HTMLTextAreaElement;
   appCodeMirror: CodeMirror.EditorFromTextArea;
+  modifiedFlag = false;
 
   constructor(
+    private _ngZone: NgZone,
     public appState: AppState,
     public hostsService: HostsService) {
     appState.state.version = 1;
@@ -49,6 +52,12 @@ export class AppComponent implements OnInit {
 
       this.appCodeMirror.getDoc().setValue(text);
       this.appCodeMirror.getDoc().clearHistory();
+
+      this.appCodeMirror.on("change", (handler, change) => {
+        this._ngZone.run(() => {
+          this.modifiedFlag = handler.getDoc().historySize().undo > 0;
+        });
+      });
 
       this.appCodeMirror.setOption("extraKeys", {
         "Ctrl-/": (cm) => {
