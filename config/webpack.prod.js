@@ -48,7 +48,8 @@ module.exports = function (env) {
       new DefinePlugin({
         'ENV': JSON.stringify(METADATA.ENV),
         'process.env.ENV': JSON.stringify(METADATA.ENV),
-        'process.env.NODE_ENV': JSON.stringify(METADATA.ENV)
+        'process.env.NODE_ENV': JSON.stringify(METADATA.ENV),
+        'process.env.VERSION': JSON.stringify(require("../package.json").version)
       }),
       new UglifyJsPlugin({
         // beautify: true, //debug
@@ -113,6 +114,7 @@ module.exports = function (env) {
     externals: [
       nodeExternals({
         whitelist: [
+          /@types/,
           /@angular/,
           /core-js/,
           /zone.js/,
@@ -120,7 +122,8 @@ module.exports = function (env) {
           'material-design-icons',
           'roboto-fontface',
           'codemirror',
-          'ts-helpers'
+          'ts-helpers',
+          'sudo-prompt'
         ]
       })
     ]

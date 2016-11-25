@@ -41,7 +41,8 @@ module.exports = function (options) {
       new DefinePlugin({
         'ENV': JSON.stringify(METADATA.ENV),
         'process.env.ENV': JSON.stringify(METADATA.ENV),
-        'process.env.NODE_ENV': JSON.stringify(METADATA.ENV)
+        'process.env.NODE_ENV': JSON.stringify(METADATA.ENV),
+        'process.env.VERSION': JSON.stringify(require("../package.json").version)
       }),
       new ExtractTextPlugin('[name].bundle.css'),
       new LoaderOptionsPlugin({
@@ -75,7 +76,8 @@ module.exports = function (options) {
           'roboto-fontface',
           'codemirror',
           'sudo-prompt',
-          'ts-helpers'
+          'ts-helpers',
+          'sudo-prompt'
         ]
       })
     ]

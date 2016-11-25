@@ -5,6 +5,7 @@ import { HostsService } from './hosts.service';
 
 import * as CodeMirror from 'codemirror';
 
+import * as os from 'os';
 import * as fs from 'fs';
 
 @Component({
@@ -18,13 +19,24 @@ export class AppComponent implements OnInit {
   hostsPath: string = 'the hosts file path...';
   textarea: HTMLTextAreaElement;
   appCodeMirror: CodeMirror.EditorFromTextArea;
-  modifiedFlag = false;
+  modifiedFlag: boolean = false;
+  targetIcon: string = "desktop_windows"
 
   constructor(
     private _ngZone: NgZone,
     public appState: AppState,
     public hostsService: HostsService) {
-    appState.state.version = 1;
+
+    this.appState.state.version = process.env.VERSION;
+
+    switch (os.platform()) {
+      case 'win32':
+        this.targetIcon = "desktop_windows";
+        break;
+      case 'linux':
+        this.targetIcon = "desktop_windows";
+        break;
+    };
   }
 
   ngOnInit() {
