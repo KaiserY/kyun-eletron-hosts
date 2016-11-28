@@ -20,7 +20,7 @@ export class AppComponent implements OnInit {
   textarea: HTMLTextAreaElement;
   appCodeMirror: CodeMirror.EditorFromTextArea;
   modifiedFlag: boolean = false;
-  targetIcon: string = "desktop_windows"
+  targetIcon: string = 'desktop_windows';
 
   constructor(
     private _ngZone: NgZone,
@@ -28,13 +28,17 @@ export class AppComponent implements OnInit {
     public hostsService: HostsService) {
 
     this.appState.state.version = process.env.VERSION;
+    this.appState.state.currentRedoCount = 0;
 
     switch (os.platform()) {
       case 'win32':
-        this.targetIcon = "desktop_windows";
+        this.targetIcon = 'desktop_windows';
         break;
       case 'linux':
-        this.targetIcon = "desktop_windows";
+        this.targetIcon = 'desktop_windows';
+        break;
+      default:
+        this.targetIcon = 'desktop_windows';
         break;
     };
   }
@@ -42,12 +46,12 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     console.log('Initial App State', this.appState.state);
 
-    this.textarea = <HTMLTextAreaElement>document.getElementById("app-editor");
+    this.textarea = <HTMLTextAreaElement>document.getElementById('app-editor');
 
     this.hostsPath = this.hostsService.getHostsPath();
 
     fs.readFile(this.hostsPath, 'utf-8', (err, data) => {
-      var text;
+      let text: string;
       if (err) {
         text = 'error: ' + err;
         console.error(text);
@@ -57,7 +61,7 @@ export class AppComponent implements OnInit {
 
       this.appCodeMirror = CodeMirror.fromTextArea(this.textarea, {
         mode: 'hosts',
-        theme: "solarized light",
+        theme: 'solarized light',
         lineNumbers: true,
         tabSize: 8
       });
@@ -65,29 +69,42 @@ export class AppComponent implements OnInit {
       this.appCodeMirror.getDoc().setValue(text);
       this.appCodeMirror.getDoc().clearHistory();
 
-      this.appCodeMirror.on("change", (handler, change) => {
+      this.appCodeMirror.on('change', (handler, change) => {
         this._ngZone.run(() => {
-          this.modifiedFlag = handler.getDoc().historySize().undo > 0;
+          console.log(handler.getDoc().historySize().undo);
+          console.log(this.appState.state.currentRedoCount);
+          this.modifiedFlag = (
+            handler.getDoc().historySize().undo !== this.appState.state.currentRedoCount
+          );
         });
       });
 
-      this.appCodeMirror.setOption("extraKeys", {
-        "Ctrl-/": (cm) => {
+      this.appCodeMirror.setOption('extraKeys', {
+        'Ctrl-/': (cm) => {
           cm.toggleComment();
         },
-        "Ctrl-S": (cm) => {
+        'Ctrl-S': (cm) => {
           this.hostsService.saveHosts(this.removeTrailingNewline(cm.getValue()));
+          this.resetmModifiedFlag();
         }
       });
     });
   }
 
+  resetmModifiedFlag() {
+    this.appState.state.currentRedoCount = this.appCodeMirror.getDoc().historySize().undo;
+    this._ngZone.run(() => {
+      this.modifiedFlag = false;
+    });
+  }
+
   onSave() {
-    var text = this.removeTrailingNewline(this.appCodeMirror.getValue());
+    let text = this.removeTrailingNewline(this.appCodeMirror.getValue());
     this.hostsService.saveHosts(text);
+    this.resetmModifiedFlag();
   }
 
   removeTrailingNewline(content: string): string {
-    return content.replace(/^\s+|\s+$/g, "");
+    return content.replace(/^\s+|\s+$/g, '');
   }
 }
