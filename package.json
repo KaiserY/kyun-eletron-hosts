@@ -115,7 +115,7 @@
     "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.26.0",
     "devtron": "^1.4.0",
-    "electron": "^1.4.8",
+    "electron": "^1.4.10",
     "electron-builder": "^8.6.0",
     "extract-text-webpack-plugin": "^2.0.0-beta",
     "file-loader": "^0.9.0",
@@ -149,7 +149,7 @@
     "webpack": "2.1.0-beta.27",
     "webpack-dev-middleware": "^1.8.4",
     "webpack-md5-hash": "0.0.5",
-    "webpack-merge": "^0.20.0",
+    "webpack-merge": "^1.0.2",
     "webpack-node-externals": "^1.5.4"
   }
 }
