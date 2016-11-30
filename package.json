@@ -1,7 +1,7 @@
 {
   "name": "kyun-electron-hosts",
   "productName": "kyun-electron-hosts",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "kyun-electron-hosts",
   "main": "./dist/electron.js",
   "repository": {
@@ -116,7 +116,7 @@
     "css-loader": "^0.26.0",
     "devtron": "^1.4.0",
     "electron": "^1.4.10",
-    "electron-builder": "^8.6.0",
+    "electron-builder": "^10.3.0",
     "extract-text-webpack-plugin": "^2.0.0-beta",
     "file-loader": "^0.9.0",
     "html-loader": "^0.4.4",

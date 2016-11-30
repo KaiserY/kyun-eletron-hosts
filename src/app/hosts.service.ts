@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import * as os from 'os';
 import * as fs from 'fs';
 
-var sudo = require('sudo-prompt');
+let sudo = require('sudo-prompt');
 
 @Injectable()
 export class HostsService {
@@ -19,21 +19,23 @@ export class HostsService {
         return process.env.WINDIR + '\\System32\\drivers\\etc\\hosts';
       case 'linux':
         return '/etc/hosts';
+      default:
+        return '';
     };
   }
 
   saveHosts(hostsContent: String) {
     switch (os.platform()) {
       case 'win32':
-        var content = "takeown /f " + this.hostsPath + "\r\n";
+        let content = 'takeown /f ' + this.hostsPath + '\r\n';
 
-        var lines = hostsContent.split(/\r?\n/);
+        let lines = hostsContent.split(/\r?\n/);
 
-        for (var i = 0; i < lines.length; i++) {
-          var action = ">>";
+        for (let i = 0; i < lines.length; i++) {
+          let action = '>>';
 
           if (i === 0) {
-            action = ">";
+            action = '>';
           }
 
           if (lines[i] === '') {
@@ -43,22 +45,22 @@ export class HostsService {
           }
         }
 
-        var tmpBatch = process.env.temp + '\\electron-hosts-' + Math.random() + '.bat';
-        fs.writeFile(tmpBatch, content, (error) => {
-          if (error) {
-            console.error('write file error: ' + error);
+        let tmpBatch = process.env.temp + '\\electron-hosts-' + Math.random() + '.bat';
+        fs.writeFile(tmpBatch, content, (writeFileError) => {
+          if (writeFileError) {
+            console.error('write file error: ' + writeFileError);
           } else {
-            var cmd = 'call "' + tmpBatch + '"';
+            let cmd = 'call "' + tmpBatch + '"';
             // var cmd = "echo hello"
-            sudo.exec(cmd, this.sudoOptions, (error) => {
-              if (error) {
-                console.error('sudo error: ' + error);
+            sudo.exec(cmd, this.sudoOptions, (sudoError) => {
+              if (sudoError) {
+                console.error('sudo error: ' + sudoError);
               } else {
                 console.log('sudo done!');
               }
-              fs.unlink(tmpBatch, (error) => {
-                if (error) {
-                  console.error('delete error: ' + error);
+              fs.unlink(tmpBatch, (deleteFileError) => {
+                if (deleteFileError) {
+                  console.error('delete error: ' + deleteFileError);
                 } else {
                   console.log('delete file done!');
                 }
@@ -68,14 +70,16 @@ export class HostsService {
         });
         break;
       case 'linux':
-        var cmd = 'sh -c \'echo "' + hostsContent + '" > ' + this.hostsPath + '\'';
-        sudo.exec(cmd, this.sudoOptions, (error) => {
-          if (error) {
-            console.error('sudo error: ' + error);
+        let cmd = 'sh -c \'echo "' + hostsContent + '" > ' + this.hostsPath + '\'';
+        sudo.exec(cmd, this.sudoOptions, (sudoError) => {
+          if (sudoError) {
+            console.error('sudo error: ' + sudoError);
           } else {
             console.log('sudo done!');
           }
         });
+        break;
+      default:
         break;
     };
   }

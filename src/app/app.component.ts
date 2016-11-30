@@ -19,8 +19,10 @@ export class AppComponent implements OnInit {
   hostsPath: string = 'the hosts file path...';
   textarea: HTMLTextAreaElement;
   appCodeMirror: CodeMirror.EditorFromTextArea;
-  modifiedFlag: boolean = false;
   targetIcon: string = 'desktop_windows';
+
+  modifiedFlag: boolean = false;
+  textOrigin: string;
 
   constructor(
     private _ngZone: NgZone,
@@ -28,7 +30,6 @@ export class AppComponent implements OnInit {
     public hostsService: HostsService) {
 
     this.appState.state.version = process.env.VERSION;
-    this.appState.state.currentRedoCount = 0;
 
     switch (os.platform()) {
       case 'win32':
@@ -69,13 +70,14 @@ export class AppComponent implements OnInit {
       this.appCodeMirror.getDoc().setValue(text);
       this.appCodeMirror.getDoc().clearHistory();
 
+      this.textOrigin = this.appCodeMirror.getValue();
+
       this.appCodeMirror.on('change', (handler, change) => {
+
+        let equel = (this.textOrigin === handler.getDoc().getValue());
+
         this._ngZone.run(() => {
-          console.log(handler.getDoc().historySize().undo);
-          console.log(this.appState.state.currentRedoCount);
-          this.modifiedFlag = (
-            handler.getDoc().historySize().undo !== this.appState.state.currentRedoCount
-          );
+          this.modifiedFlag = !equel;
         });
       });
 
@@ -83,16 +85,14 @@ export class AppComponent implements OnInit {
         'Ctrl-/': (cm) => {
           cm.toggleComment();
         },
-        'Ctrl-S': (cm) => {
-          this.hostsService.saveHosts(this.removeTrailingNewline(cm.getValue()));
-          this.resetmModifiedFlag();
+        'Ctrl-S': () => {
+          this.onSave();
         }
       });
     });
   }
 
   resetmModifiedFlag() {
-    this.appState.state.currentRedoCount = this.appCodeMirror.getDoc().historySize().undo;
     this._ngZone.run(() => {
       this.modifiedFlag = false;
     });
@@ -102,6 +102,8 @@ export class AppComponent implements OnInit {
     let text = this.removeTrailingNewline(this.appCodeMirror.getValue());
     this.hostsService.saveHosts(text);
     this.resetmModifiedFlag();
+
+    this.textOrigin = this.appCodeMirror.getValue();
   }
 
   removeTrailingNewline(content: string): string {
