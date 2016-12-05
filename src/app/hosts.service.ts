@@ -7,7 +7,6 @@ let sudo = require('sudo-prompt');
 
 @Injectable()
 export class HostsService {
-  hostsPath = this.getHostsPath();
 
   sudoOptions = {
     name: 'test'
@@ -24,63 +23,97 @@ export class HostsService {
     };
   }
 
-  saveHosts(hostsContent: String) {
-    switch (os.platform()) {
-      case 'win32':
-        let content = 'takeown /f ' + this.hostsPath + '\r\n';
-
-        let lines = hostsContent.split(/\r?\n/);
-
-        for (let i = 0; i < lines.length; i++) {
-          let action = '>>';
-
-          if (i === 0) {
-            action = '>';
-          }
-
-          if (lines[i] === '') {
-            content += action + ' "' + this.hostsPath + '" echo[\r\n';
-          } else {
-            content += action + ' "' + this.hostsPath + '" echo ' + lines[i] + '\r\n';
-          }
+  readHosts(): Promise<string> {
+    return new Promise((fulfill, reject) => {
+      fs.readFile(this.getHostsPath(), 'utf-8', (err, data) => {
+        if (err) {
+          console.error(err);
+          reject(err);
+        } else {
+          fulfill(data);
         }
+      });
+    });
+  }
 
-        let tmpBatch = process.env.temp + '\\electron-hosts-' + Math.random() + '.bat';
-        fs.writeFile(tmpBatch, content, (writeFileError) => {
-          if (writeFileError) {
-            console.error('write file error: ' + writeFileError);
-          } else {
-            let cmd = 'call "' + tmpBatch + '"';
-            // var cmd = "echo hello"
+  saveHosts(hostsContent: String): Promise<any> {
+    return new Promise((fulfill, reject) => {
+      try {
+        switch (os.platform()) {
+          case 'win32':
+            let content = 'takeown /f ' + this.getHostsPath() + '\r\n';
+
+            let lines = hostsContent.split(/\r?\n/);
+
+            for (let i = 0; i < lines.length; i++) {
+              let action = '>>';
+
+              if (i === 0) {
+                action = '>';
+              }
+
+              if (lines[i] === '') {
+                content += action + ' "' + this.getHostsPath() + '" echo[\r\n';
+              } else {
+                content += action + ' "' + this.getHostsPath() + '" echo ' + lines[i] + '\r\n';
+              }
+            }
+
+            let tmpBatch = process.env.temp + '\\electron-hosts-' + Math.random() + '.bat';
+            fs.writeFile(tmpBatch, content, (writeFileError) => {
+              if (writeFileError) {
+                console.error('write file error: ' + writeFileError);
+                reject(writeFileError);
+                return;
+              } else {
+                let cmd = 'call "' + tmpBatch + '"';
+                try {
+                  sudo.exec(cmd, this.sudoOptions, (sudoError) => {
+                    fs.unlink(tmpBatch, (deleteFileError) => {
+                      if (deleteFileError) {
+                        console.error('delete error: ' + deleteFileError);
+                        reject(deleteFileError);
+                        return;
+                      } else {
+                        console.log('delete file done!');
+
+                        if (sudoError) {
+                          console.error('sudo error: ' + sudoError);
+                          reject(sudoError);
+                          return;
+                        } else {
+                          console.log('sudo done!');
+                          fulfill();
+                        }
+                      }
+                    });
+                  });
+                } catch (ex) {
+                  console.error(ex);
+                  reject(ex);
+                }
+              }
+            });
+            break;
+          case 'linux':
+            let cmd = 'sh -c \'echo "' + hostsContent + '" > ' + this.getHostsPath() + '\'';
             sudo.exec(cmd, this.sudoOptions, (sudoError) => {
               if (sudoError) {
                 console.error('sudo error: ' + sudoError);
+                reject(sudoError);
               } else {
                 console.log('sudo done!');
+                fulfill();
               }
-              fs.unlink(tmpBatch, (deleteFileError) => {
-                if (deleteFileError) {
-                  console.error('delete error: ' + deleteFileError);
-                } else {
-                  console.log('delete file done!');
-                }
-              });
             });
-          }
-        });
-        break;
-      case 'linux':
-        let cmd = 'sh -c \'echo "' + hostsContent + '" > ' + this.hostsPath + '\'';
-        sudo.exec(cmd, this.sudoOptions, (sudoError) => {
-          if (sudoError) {
-            console.error('sudo error: ' + sudoError);
-          } else {
-            console.log('sudo done!');
-          }
-        });
-        break;
-      default:
-        break;
-    };
+            break;
+          default:
+            break;
+        };
+      } catch (ex) {
+        console.error(ex);
+        reject(ex);
+      }
+    });
   }
 }

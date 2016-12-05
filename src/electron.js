@@ -16,11 +16,14 @@ let mainWindow
 function createWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600
+    backgroundColor: '#fdf6e3',
+    show: false
   });
 
-  mainWindow.maximize();
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.maximize();
+    mainWindow.show();
+  })
 
   // and load the index.html of the app.
   mainWindow.loadURL(url.format({

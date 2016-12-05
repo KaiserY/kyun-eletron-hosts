@@ -16,7 +16,7 @@ import * as fs from 'fs';
 export class AppComponent implements OnInit {
 
   title: string = 'Hosts';
-  hostsPath: string = 'the hosts file path...';
+
   textarea: HTMLTextAreaElement;
   appCodeMirror: CodeMirror.EditorFromTextArea;
   targetIcon: string = 'desktop_windows';
@@ -49,61 +49,54 @@ export class AppComponent implements OnInit {
 
     this.textarea = <HTMLTextAreaElement>document.getElementById('app-editor');
 
-    this.hostsPath = this.hostsService.getHostsPath();
-
-    fs.readFile(this.hostsPath, 'utf-8', (err, data) => {
-      let text: string;
-      if (err) {
-        text = 'error: ' + err;
-        console.error(text);
-      } else {
-        text = data;
-      };
-
-      this.appCodeMirror = CodeMirror.fromTextArea(this.textarea, {
-        mode: 'hosts',
-        theme: 'solarized light',
-        lineNumbers: true,
-        tabSize: 8
-      });
-
-      this.appCodeMirror.getDoc().setValue(text);
-      this.appCodeMirror.getDoc().clearHistory();
-
-      this.textOrigin = this.appCodeMirror.getValue();
-
-      this.appCodeMirror.on('change', (handler, change) => {
-
-        let equel = (this.textOrigin === handler.getDoc().getValue());
-
-        this._ngZone.run(() => {
-          this.modifiedFlag = !equel;
-        });
-      });
-
-      this.appCodeMirror.setOption('extraKeys', {
-        'Ctrl-/': (cm) => {
-          cm.toggleComment();
-        },
-        'Ctrl-S': () => {
-          this.onSave();
-        }
-      });
+    this.appCodeMirror = CodeMirror.fromTextArea(this.textarea, {
+      mode: 'hosts',
+      theme: 'solarized light',
+      lineNumbers: true,
+      tabSize: 8
     });
+
+    this.appCodeMirror.on('change', (handler, change) => {
+
+      let equel = (this.textOrigin === handler.getDoc().getValue());
+
+      this.setmModifiedFlag(!equel);
+    });
+
+    this.appCodeMirror.setOption('extraKeys', {
+      'Ctrl-/': (cm) => {
+        cm.toggleComment();
+      },
+      'Ctrl-S': () => {
+        this.onSave();
+      }
+    });
+
+    this.hostsService.readHosts()
+      .then((data) => {
+
+        this.appCodeMirror.getDoc().setValue(data);
+        this.appCodeMirror.getDoc().clearHistory();
+
+        this.textOrigin = this.appCodeMirror.getValue();
+        this.setmModifiedFlag(false);
+      });
   }
 
-  resetmModifiedFlag() {
+  setmModifiedFlag(flag: boolean) {
     this._ngZone.run(() => {
-      this.modifiedFlag = false;
+      this.modifiedFlag = flag;
     });
   }
 
   onSave() {
     let text = this.removeTrailingNewline(this.appCodeMirror.getValue());
-    this.hostsService.saveHosts(text);
-    this.resetmModifiedFlag();
-
-    this.textOrigin = this.appCodeMirror.getValue();
+    this.hostsService.saveHosts(text).then(() => {
+      this.textOrigin = this.appCodeMirror.getValue();
+      this.setmModifiedFlag(false);
+    }).catch((err) => {
+      console.error('onSave error: ' + err);
+    });
   }
 
   removeTrailingNewline(content: string): string {
