@@ -32,6 +32,7 @@
         "variable-declaration": "space"
       }
     ],
+
     "ban": false,
     "curly": false,
     "forin": true,
@@ -86,6 +87,7 @@
         "singleline": "never"
       }
     ],
+
     "align": false,
     "class-name": true,
     "comment-format": [
@@ -96,7 +98,7 @@
     "jsdoc-format": true,
     "no-consecutive-blank-lines": false,
     "one-line": [
-      true,
+      false,
       "check-open-brace",
       "check-catch",
       "check-else",
@@ -108,10 +110,7 @@
       "single",
       "avoid-escape"
     ],
-    "semicolon": [
-      true,
-      "always"
-    ],
+    "semicolon": [true, "always"],
     "variable-name": [
       true,
       "check-format",
