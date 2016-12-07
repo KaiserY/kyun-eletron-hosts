@@ -1,5 +1,7 @@
 module.exports = function (config) {
-  var testWebpackConfig = require('./webpack.test.js')({ env: 'test' });
+  var testWebpackConfig = require('./webpack.test.js')({
+    env: 'test'
+  });
 
   var configuration = {
 
@@ -21,13 +23,23 @@ module.exports = function (config) {
      *
      * we are building the test environment in ./spec-bundle.js
      */
-    files: [{ pattern: './config/spec-bundle.js', watched: false }],
+    files: [{
+      pattern: './config/spec-bundle.js',
+      watched: false
+    }],
 
     /*
      * preprocess matching files before serving them to the browser
      * available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
      */
-    preprocessors: { './config/spec-bundle.js': ['coverage', 'webpack', 'sourcemap'] },
+    preprocessors: {
+      '**/*.js': ['electron'],
+      './config/spec-bundle.js': ['coverage', 'webpack', 'sourcemap']
+    },
+
+    client: {
+      useIframe: false
+    },
 
     // Webpack Config at ./webpack.test.js
     webpack: testWebpackConfig,
@@ -43,7 +55,9 @@ module.exports = function (config) {
     },
 
     // Webpack please don't spam the console when running in karma!
-    webpackMiddleware: { stats: 'errors-only' },
+    webpackMiddleware: {
+      stats: 'errors-only'
+    },
 
     /*
      * test results reporter to use
@@ -52,9 +66,6 @@ module.exports = function (config) {
      * available reporters: https://npmjs.org/browse/keyword/karma-reporter
      */
     reporters: ['mocha', 'coverage', 'remap-coverage'],
-
-    // web server port
-    port: 9876,
 
     // enable / disable colors in the output (reporters and logs)
     colors: true,
@@ -72,16 +83,7 @@ module.exports = function (config) {
      * start these browsers
      * available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
      */
-    browsers: [
-      'Chrome'
-    ],
-
-    customLaunchers: {
-      ChromeTravisCi: {
-        base: 'Chrome',
-        flags: ['--no-sandbox']
-      }
-    },
+    browsers: ['Electron'],
 
     /*
      * Continuous Integration mode

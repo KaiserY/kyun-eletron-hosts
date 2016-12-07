@@ -6,7 +6,6 @@ import { HostsService } from './hosts.service';
 import * as CodeMirror from 'codemirror';
 
 import * as os from 'os';
-import * as fs from 'fs';
 
 @Component({
   selector: 'app',

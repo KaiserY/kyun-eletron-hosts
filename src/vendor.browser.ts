@@ -18,12 +18,10 @@ import '@angular/router';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/mergeMap';
 
-import "../node_modules/codemirror/addon/comment/comment.js";
-import "./public/js/codemirror-mode-hosts.js";
+import '../node_modules/codemirror/addon/comment/comment.js';
+import './public/js/codemirror-mode-hosts.js';
 
-// import "../node_modules/roboto-fontface/css/roboto/roboto-fontface.css";
-// import "../node_modules/material-design-icons/iconfont/material-icons.css";
-import "./public/css/styles.css";
+import './public/css/styles.css';
 
 if ('production' === process.env.ENV) {
   // Production
