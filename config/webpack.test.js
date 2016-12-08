@@ -36,8 +36,9 @@ module.exports = function (options) {
         ]
       }, {
         test: /\.ts$/,
-        loaders: [
-          'awesome-typescript-loader?' + JSON.stringify({
+        use: [{
+          loader: "awesome-typescript-loader",
+          options: {
             // use inline sourcemaps for "karma-remap-coverage" reporter
             sourceMap: false,
             inlineSourceMap: true,
@@ -46,11 +47,11 @@ module.exports = function (options) {
               // Remove TypeScript helpers to be injected
               // below by DefinePlugin
               removeComments: true
-
             }
-          }),
-          'angular2-template-loader'
-        ],
+          }
+        }, {
+          loader: "angular2-template-loader"
+        }],
         exclude: [/\.e2e\.ts$/]
       }, {
         test: /\.json$/,

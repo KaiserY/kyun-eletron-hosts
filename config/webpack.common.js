@@ -10,7 +10,7 @@ const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 const LoaderOptionsPlugin = require('webpack/lib/LoaderOptionsPlugin');
 
 const METADATA = {
-  title: 'Kyun Client',
+  title: 'Kyun Electron Hosts',
   baseUrl: '/'
 };
 
