@@ -41,6 +41,37 @@ export class HostsService {
       try {
         switch (os.platform()) {
           case 'win32':
+            let command = 'takeown /f ' + this.getHostsPath();
+            let hostLines = hostsContent.split(/\r?\n/);
+
+            for (let i = 0; i < hostLines.length; i++) {
+              let action = '>>';
+
+              if (i === 0) {
+                action = '>';
+              }
+
+              if (hostLines[i].trim() === '') {
+                command += '& ' + action + ' "' + this.getHostsPath() + '" echo[';
+              } else {
+                command += '& ' + action + ' "' + this.getHostsPath()
+                  + '" echo ' + hostLines[i];
+              }
+            }
+
+            console.log(command);
+
+            sudo.exec(command, this.sudoOptions, (sudoError) => {
+              if (sudoError) {
+                console.error('sudo error: ' + sudoError);
+                reject(sudoError);
+              } else {
+                console.log('sudo done!');
+                fulfill();
+              }
+            });
+            break;
+          case 'win32_backup':
             let content = 'takeown /f ' + this.getHostsPath() + '\r\n';
 
             let lines = hostsContent.split(/\r?\n/);
