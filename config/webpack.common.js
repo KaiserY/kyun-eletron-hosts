@@ -27,16 +27,18 @@ module.exports = function (options) {
       extensions: ['.ts', '.js', '.json'],
       modules: [
         helpers.root('src'),
-        'node_modules']
+        'node_modules'
+      ]
     },
 
     module: {
       rules: [{
         test: /\.ts$/,
-        loaders: [
-          'awesome-typescript-loader',
-          'angular2-template-loader'
-        ],
+        use: [{
+          loader: 'awesome-typescript-loader'
+        }, {
+          loader: 'angular2-template-loader'
+        }],
         exclude: [/\.(spec|e2e)\.ts$/]
       }, {
         test: /\.json$/,
@@ -47,13 +49,18 @@ module.exports = function (options) {
         exclude: [helpers.root('src/index.html')]
       }, {
         test: /\.(png|jpe?g|gif|svg|woff|woff2|ttf|eot|ico)$/,
-        loader: 'file-loader?name=assets/[name].[hash].[ext]'
+        loader: 'file-loader',
+        options: {
+          name: 'assets/[name].[hash].[ext]'
+        }
       }, {
         test: /\.css$/,
         exclude: helpers.root('src', 'app'),
-        loaders: ExtractTextPlugin.extract({ fallbackLoader: 'style-loader', loader: ['css-loader'] })
-      },
-      {
+        loader: ExtractTextPlugin.extract({
+          fallbackLoader: 'style-loader',
+          loader: ['css-loader']
+        })
+      }, {
         test: /\.css$/,
         include: helpers.root('src', 'app'),
         loader: 'raw-loader'
