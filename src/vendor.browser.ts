@@ -5,6 +5,10 @@
 
 // TODO(gdi2290): switch to DLLs
 
+// 临时解决加载顺序问题，2.4.1左右的版本需要先加载 reflect polyfill
+
+import 'core-js/es7/reflect';
+
 // Angular 2
 import '@angular/platform-browser';
 import '@angular/platform-browser-dynamic';
