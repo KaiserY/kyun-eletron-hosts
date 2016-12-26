@@ -69,7 +69,7 @@ module.exports = function (options) {
 
     plugins: [
       new CommonsChunkPlugin({
-        name: ['polyfills', 'vendor']
+        name: ['app', 'polyfills', 'vendor']
       }),
       new ContextReplacementPlugin(
         // The (\\|\/) piece accounts for path separators in *nix and Windows
