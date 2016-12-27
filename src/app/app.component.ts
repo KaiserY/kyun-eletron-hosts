@@ -21,6 +21,7 @@ export class AppComponent implements OnInit {
   targetIcon: string = 'desktop_windows';
 
   modifiedFlag: boolean = false;
+  saveFlag: boolean = false;
   textOrigin: string;
 
   constructor(
@@ -88,12 +89,21 @@ export class AppComponent implements OnInit {
     });
   }
 
+  setmSaveFlag(flag: boolean) {
+    this._ngZone.run(() => {
+      this.saveFlag = flag;
+    });
+  }
+
   onSave() {
+    this.setmSaveFlag(true);
     let text = this.removeTrailingNewline(this.appCodeMirror.getValue());
     this.hostsService.saveHosts(text).then(() => {
       this.textOrigin = this.appCodeMirror.getValue();
       this.setmModifiedFlag(false);
+      this.setmSaveFlag(false);
     }).catch((err) => {
+      this.setmSaveFlag(false);
       console.error('onSave error: ' + err);
     });
   }

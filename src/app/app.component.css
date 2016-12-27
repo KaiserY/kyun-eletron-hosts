@@ -18,6 +18,16 @@ md-card {
   background-color: #eee8d5;
 }
 
+md-card-title > span {
+  font-size: 18px;
+}
+
+md-card-title > md-spinner {
+  width: 12px;
+  height: 12px;
+  display: inline-block;
+}
+
 md-card-content {
   height: calc(100% - 56px);
 }
