@@ -127,6 +127,7 @@ export class HostsService {
             });
             break;
           case 'linux':
+          case 'darwin':
             let cmd = 'sh -c \'echo "' + hostsContent + '" > ' + this.getHostsPath() + '\'';
             sudo.exec(cmd, this.sudoOptions, (sudoError) => {
               if (sudoError) {
@@ -139,6 +140,7 @@ export class HostsService {
             });
             break;
           default:
+            reject('not supported');
             break;
         };
       } catch (ex) {

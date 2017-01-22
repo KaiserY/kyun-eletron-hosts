@@ -38,6 +38,9 @@ export class AppComponent implements OnInit {
       case 'linux':
         this.targetIcon = 'desktop_windows';
         break;
+      case 'darwin':
+        this.targetIcon = 'desktop_mac';
+        break;
       default:
         this.targetIcon = 'desktop_windows';
         break;
@@ -45,6 +48,9 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    // console.log(process);
+
     console.log('Initial App State', this.appState.state);
 
     this.textarea = <HTMLTextAreaElement>document.getElementById('app-editor');

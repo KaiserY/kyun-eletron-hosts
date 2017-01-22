@@ -80,7 +80,8 @@
       "depends": []
     },
     "dmg": {
-      "contents": [{
+      "contents": [
+        {
           "x": 110,
           "y": 150
         },
@@ -106,7 +107,7 @@
     "@angular/material": "2.0.0-beta.1",
     "@angular/platform-browser": "4.0.0-beta.4",
     "@angular/platform-browser-dynamic": "4.0.0-beta.4",
-    "@angular/router": "3.4.4",
+    "@angular/router": "4.0.0-beta.4",
     "@angular/upgrade": "4.0.0-beta.4",
     "@types/codemirror": "0.0.37",
     "@types/hammerjs": "2.0.34",
