@@ -90,6 +90,9 @@ export class AppComponent implements OnInit {
   }
 
   setmSaveFlag(flag: boolean) {
+
+    this.appCodeMirror.setOption('readOnly', flag);
+
     this._ngZone.run(() => {
       this.saveFlag = flag;
     });

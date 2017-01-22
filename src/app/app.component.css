@@ -7,6 +7,10 @@ md-toolbar {
   color: #eee8d5
 }
 
+md-toolbar button {
+  font-size: 20px;
+}
+
 section {
   height: calc(100% - 64px - 24px);
   padding: 12px;
