@@ -18,6 +18,8 @@ export class HostsService {
         return process.env.WINDIR + '\\System32\\drivers\\etc\\hosts';
       case 'linux':
         return '/etc/hosts';
+      case 'darwin':
+        return '/private/etc/hosts';
       default:
         return '';
     };

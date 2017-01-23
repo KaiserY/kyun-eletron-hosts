@@ -3,11 +3,14 @@ const helpers = require('./helpers');
 
 const CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin');
 const ContextReplacementPlugin = require('webpack/lib/ContextReplacementPlugin');
+const CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin;
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 const LoaderOptionsPlugin = require('webpack/lib/LoaderOptionsPlugin');
+const AotPlugin = require('@ngtools/webpack').AotPlugin;
+const ngcWebpack = require('ngc-webpack');
 
 const METADATA = {
   title: 'Kyun Electron Hosts',
@@ -15,12 +18,15 @@ const METADATA = {
 };
 
 module.exports = function (options) {
+
   isProd = options.env === 'production';
+  isAOT = process.env.AOT === true || process.env.AOT === "true"
+
   return {
     entry: {
       'polyfills': './src/polyfills.browser.ts',
       'vendor': './src/vendor.browser.ts',
-      'app': './src/main.browser.ts'
+      'app': isAOT ? './src/main.browser.aot.ts' : './src/main.browser.ts'
     },
 
     resolve: {
@@ -34,7 +40,9 @@ module.exports = function (options) {
     module: {
       rules: [{
         test: /\.ts$/,
-        use: [{
+        use: isAOT ? [{
+          loader: '@ngtools/webpack'
+        }] : [{
           loader: 'awesome-typescript-loader'
         }, {
           loader: 'angular2-template-loader'
@@ -68,8 +76,18 @@ module.exports = function (options) {
     },
 
     plugins: [
+      new CheckerPlugin(),
       new CommonsChunkPlugin({
-        name: ['app', 'polyfills', 'vendor']
+        name: 'polyfills',
+        chunks: ['polyfills']
+      }),
+      new CommonsChunkPlugin({
+        name: 'vendor',
+        chunks: ['main'],
+        minChunks: module => /node_modules\//.test(module.resource)
+      }),
+      new CommonsChunkPlugin({
+        name: ['polyfills', 'vendor'].reverse()
       }),
       new ContextReplacementPlugin(
         // The (\\|\/) piece accounts for path separators in *nix and Windows
@@ -89,7 +107,11 @@ module.exports = function (options) {
       new ScriptExtHtmlWebpackPlugin({
         defaultAttribute: 'defer'
       }),
-      new LoaderOptionsPlugin({})
+      new LoaderOptionsPlugin({}),
+      // new AotPlugin({
+      //   tsConfigPath: './tsconfig.webpack.json',
+      //   entryModule: 'src/app/app.module#AppModule'
+      // })
     ],
 
     node: {

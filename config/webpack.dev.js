@@ -17,14 +17,18 @@ const nodeExternals = require('webpack-node-externals');
 const ENV = process.env.ENV = process.env.NODE_ENV = 'development';
 const HOST = process.env.HOST || 'localhost';
 const PORT = process.env.PORT || 3000;
-const METADATA = webpackMerge(commonConfig({ env: ENV }).metadata, {
+const METADATA = webpackMerge(commonConfig({
+  env: ENV
+}).metadata, {
   host: HOST,
   port: PORT,
   ENV: ENV
 });
 
 module.exports = function (options) {
-  return webpackMerge(commonConfig({ env: ENV }), {
+  return webpackMerge(commonConfig({
+    env: ENV
+  }), {
     devtool: 'cheap-module-eval-source-map',
 
     target: 'electron-renderer',

@@ -24,7 +24,7 @@
     "webpack-dev-server": "webpack-dev-server",
     "webdriver-manager": "webdriver-manager",
     "protractor": "protractor",
-    "clean": "rimraf dist",
+    "clean": "rimraf dist && rimraf compiled",
     "start": "npm run build:dev && concurrently \"better-npm-run server:dev\" \"electron ./\"",
     "electron": "electron ./",
     "electron:dev": "npm run build:dev && electron ./",
@@ -34,6 +34,7 @@
     "server:prod": "npm run clean && better-npm-run server:prod",
     "build:dev": "npm run clean && better-npm-run build:dev",
     "build:prod": "npm run clean && better-npm-run build:prod",
+    "build:aot": "npm run clean && better-npm-run build:prod:aot",
     "pack": "npm run clean && npm run build:dev && build --dir",
     "dist": "npm run clean && npm run build:prod && build",
     "webdriver:update": "npm run webdriver-manager update",
@@ -52,6 +53,13 @@
       "command": "webpack --progress --profile --colors --display-reasons --display-error-details",
       "env": {
         "NODE_ENV": "prod"
+      }
+    },
+    "build:prod:aot": {
+      "command": "webpack --progress --profile --colors --display-reasons --display-error-details",
+      "env": {
+        "NODE_ENV": "prod",
+        "AOT": true
       }
     },
     "server:dev": {
@@ -101,14 +109,17 @@
   "devDependencies": {
     "@angular/common": "4.0.0-beta.4",
     "@angular/compiler": "4.0.0-beta.4",
+    "@angular/compiler-cli": "4.0.0-beta.4",
     "@angular/core": "4.0.0-beta.4",
     "@angular/forms": "4.0.0-beta.4",
     "@angular/http": "4.0.0-beta.4",
     "@angular/material": "2.0.0-beta.1",
     "@angular/platform-browser": "4.0.0-beta.4",
     "@angular/platform-browser-dynamic": "4.0.0-beta.4",
+    "@angular/platform-server": "4.0.0-beta.4",
     "@angular/router": "4.0.0-beta.4",
     "@angular/upgrade": "4.0.0-beta.4",
+    "@ngtools/webpack": "^1.2.4",
     "@types/codemirror": "0.0.37",
     "@types/hammerjs": "2.0.34",
     "@types/jasmine": "2.5.41",
@@ -145,6 +156,8 @@
     "karma-typescript": "2.1.6",
     "karma-webpack": "2.0.1",
     "material-design-icons": "3.0.1",
+    "ng-router-loader": "^2.1.0",
+    "ngc-webpack": "^1.1.2",
     "postcss-loader": "1.2.2",
     "protractor": "5.0.0",
     "raw-loader": "0.5.1",

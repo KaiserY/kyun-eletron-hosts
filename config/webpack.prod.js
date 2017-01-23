@@ -23,14 +23,19 @@ const nodeExternals = require('webpack-node-externals');
 const ENV = process.env.NODE_ENV = process.env.ENV = 'production';
 const HOST = process.env.HOST || 'localhost';
 const PORT = process.env.PORT || 3000;
-const METADATA = webpackMerge(commonConfig({ env: ENV }).metadata, {
+const METADATA = webpackMerge(commonConfig({
+  env: ENV
+}).metadata, {
   host: HOST,
   port: PORT,
   ENV: ENV
 });
 
 module.exports = function (env) {
-  return webpackMerge(commonConfig({ env: ENV }), {
+
+  return webpackMerge(commonConfig({
+    env: ENV
+  }), {
     devtool: 'source-map',
 
     target: 'electron-renderer',
@@ -68,17 +73,29 @@ module.exports = function (env) {
 
 
         beautify: false, //prod
-        mangle: {
-          screw_ie8: true,
-          keep_fnames: true
+        output: {
+          comments: false
         }, //prod
-        compress: {
+        mangle: {
           screw_ie8: true
         }, //prod
-        comments: false //prod
+        compress: {
+          screw_ie8: true,
+          warnings: false,
+          conditionals: true,
+          unused: true,
+          comparisons: true,
+          sequences: true,
+          dead_code: true,
+          evaluate: true,
+          if_return: true,
+          join_vars: true,
+          negate_iife: false // we need this for lazy v8
+        },
       }),
       new ExtractTextPlugin('[name].[chunkhash].bundle.css'),
       new LoaderOptionsPlugin({
+        minimize: true,
         debug: false,
         options: {
           tslint: {
