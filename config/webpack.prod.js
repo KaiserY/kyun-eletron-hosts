@@ -49,6 +49,7 @@ module.exports = function (env) {
     },
 
     plugins: [
+      new ExtractTextPlugin('[name].[chunkhash].bundle.css'),
       new WebpackMd5Hash(),
       new DefinePlugin({
         'ENV': JSON.stringify(METADATA.ENV),
@@ -93,7 +94,6 @@ module.exports = function (env) {
           negate_iife: false // we need this for lazy v8
         },
       }),
-      new ExtractTextPlugin('[name].[chunkhash].bundle.css'),
       new LoaderOptionsPlugin({
         minimize: true,
         debug: false,

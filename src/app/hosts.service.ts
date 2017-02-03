@@ -41,7 +41,7 @@ export class HostsService {
   saveHosts(hostsContent: String): Promise<any> {
     return new Promise((fulfill, reject) => {
       try {
-        switch (os.platform()) {
+        switch (os.platform().toString()) {
           case 'win32':
             let command = 'takeown /f ' + this.getHostsPath();
             let hostLines = hostsContent.split(/\r?\n/);
