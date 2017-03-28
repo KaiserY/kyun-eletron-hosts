@@ -57,15 +57,17 @@ module.exports = function (options) {
         exclude: [helpers.root('src/index.html')]
       }, {
         test: /\.(png|jpe?g|gif|svg|woff|woff2|ttf|eot|ico)$/,
-        loader: 'file-loader',
-        options: {
-          name: 'assets/[name].[hash].[ext]'
-        }
+        use: [{
+          loader: 'file-loader',
+          options: {
+            name: 'assets/[name].[hash].[ext]'
+          }
+        }]
       }, {
         test: /\.css$/,
         exclude: helpers.root('src', 'app'),
         loader: ExtractTextPlugin.extract({
-          fallbackLoader: 'style-loader',
+          fallback: 'style-loader',
           loader: ['css-loader']
         })
       }, {

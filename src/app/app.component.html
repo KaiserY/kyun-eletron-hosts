@@ -1,19 +1,19 @@
-<main>
+<main fxLayout="column">
   <md-toolbar color="primary">
     <span>Kyun Electron Hosts</span>
     <span class="fill-space"></span>
     <md-icon class="icon-target">{{targetIcon}}</md-icon>
     <span>v{{appState.state.version}}</span>
   </md-toolbar>
-  <section>
-    <md-card>
+  <section fxFlex fxLayout="column">
+    <md-card fxFlex fxLayout="column">
       <md-card-header>
         <md-card-title><span>{{title}}</span><span *ngIf="modifiedFlag">*</span>
           <md-spinner *ngIf="saveFlag"></md-spinner>
         </md-card-title>
         <md-card-subtitle>{{hostsService.getHostsPath()}}</md-card-subtitle>
       </md-card-header>
-      <md-card-content>
+      <md-card-content fxFlex fxLayout="column">
         <textarea id="app-editor"></textarea>
       </md-card-content>
     </md-card>

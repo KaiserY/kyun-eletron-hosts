@@ -2,9 +2,9 @@ main {
   height: 100%;
 }
 
-md-toolbar {
+md-toolbar.mat-toolbar.mat-primary {
   background-color: #93a1a1;
-  color: #eee8d5
+  color: #eee8d5;
 }
 
 md-toolbar button {
@@ -12,13 +12,11 @@ md-toolbar button {
 }
 
 section {
-  height: calc(100% - 64px - 24px);
   padding: 12px;
   background-color: #fdf6e3;
 }
 
 md-card {
-  height: calc(100% - 48px);
   background-color: #eee8d5;
 }
 
@@ -30,10 +28,6 @@ md-card-title > md-spinner {
   width: 12px;
   height: 12px;
   display: inline-block;
-}
-
-md-card-content {
-  height: calc(100% - 56px);
 }
 
 .fill-space {

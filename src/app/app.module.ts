@@ -1,6 +1,7 @@
 import { NgModule, ApplicationRef } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { MaterialModule } from '@angular/material';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 /*
  * Platform and Environment providers/directives/pipes
@@ -35,6 +36,7 @@ const APP_PROVIDERS = [
   ],
   imports: [ // import Angular's modules
     MaterialModule.forRoot(),
+    FlexLayoutModule.forRoot(),
     BrowserModule
   ],
   providers: [ // expose our Services and Providers into Angular's dependency injection
